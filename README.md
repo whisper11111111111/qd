@@ -7,7 +7,7 @@
 
 修改index.html中的
 
-`<<script>
-        var baseUrl = " 新的ngrok映射外网的域名";>`
+`<script>
+        var baseUrl = " 新的ngrok映射外网的域名";`
 
 运行app.py
