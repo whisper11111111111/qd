@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二维码签到</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        @import url('https://2e61-61-130-109-206.ngrok-free.app');
+        body {
+            font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            transition: background 0.5s ease;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.8s forwards;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+            font-weight: 600;
+        }
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        #qrcode:hover {
+            transform: scale(1.05);
+        }
+        .instruction {
+            color: #666;
+            margin-top: 2rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            opacity: 0;
+            animation: fadeIn 0.8s 0.5s forwards;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        #error {
+            color: #ff4d4f;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        #debug {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>扫描二维码签到</h1>
+        <div id="qrcode"></div>
+        <p class="instruction">请使用手机扫描上方二维码进行签到<br>扫描后请填写相关信息</p>
+        <div id="error"></div>
+        <div id="debug"></div>
+    </div>
+    <script>
+        var baseUrl = "https://2e61-61-130-109-206.ngrok-free.app";
+        var signInUrl = baseUrl + "/sign_in";
+        console.log("Generated sign-in URL:", signInUrl);
+
+        document.getElementById('debug').textContent = "Base URL: " + baseUrl;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                if (typeof QRCode === 'undefined') {
+                    throw new Error('QRCode library not loaded');
+                }
+                new QRCode(document.getElementById("qrcode"), {
+                    text: signInUrl,
+                    width: 200,
+                    height: 200
+                });
+                console.log("QR code generated successfully");
+            } catch (error) {
+                console.error("Error generating QR code:", error);
+                document.getElementById("error").textContent = "Error generating QR code: " + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

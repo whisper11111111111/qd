@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>签到</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        body {
+            font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            transition: background 0.5s ease;
+        }
+        .container {
+            background-color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.8s forwards;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+        input {
+            padding: 0.8rem;
+            border: 2px solid #d9d9d9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        button {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        button:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .success-message {
+            display: none;
+            text-align: center;
+            color: #52c41a;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>签到</h1>
+        <form id="loginForm">
+            <label for="name">姓名：</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="student_id">学号：</label>
+            <input type="text" id="student_id" name="student_id" required>
+            
+            <label for="phone">手机号：</label>
+            <input type="tel" id="phone" name="phone" required>
+            
+            <button type="submit">提交</button>
+        </form>
+        <div id="successMessage" class="success-message">提交成功！</div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            var formData = new FormData(this);
+            var button = this.querySelector('button');
+            button.disabled = true;
+            button.textContent = '提交中...';
+            
+            fetch('/submit_login', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('loginForm').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.querySelector('.container').style.backgroundColor = '#f6ffed';
+                    document.body.style.background = 'linear-gradient(135deg, #e6f7ff 0%, #b3e0ff 100%)';
+                } else {
+                    alert('提交失败，请重试');
+                    button.disabled = false;
+                    button.textContent = '提交';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('发生错误，请重试');
+                button.disabled = false;
+                button.textContent = '提交';
+            });
+        });
+    </script>
+</body>
+</html>
